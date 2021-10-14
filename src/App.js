@@ -1,5 +1,5 @@
 import { useState } from "react"
-import FileUploader from "./components/FileUploader"
+import OcrReader from "./components/OcrReader"
 import SmsSender from "./components/SmsSender"
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="App">
       <header>OCRアプリへようこそ！</header>
-      <FileUploader
+      <OcrReader
         onReadData={onReadData}
         onRemoveClicked={onRemoveClicked}
       />

@@ -9,7 +9,7 @@ const STATUSES = {
   SUCCEEDED: "OCR処理完了",
 }
 
-function FileUploader({onReadData, onRemoveClicked}) {
+function OcrReader({onReadData, onRemoveClicked}) {
   const [selectedImage, setSelectedImage] = useState(null)
   const [loadingState, setLoadingState] = useState(STATUSES.IDLE)
   const worker = createWorker()
@@ -83,4 +83,4 @@ function FileUploader({onReadData, onRemoveClicked}) {
   )
 }
 
-export default FileUploader
+export default OcrReader
