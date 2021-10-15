@@ -9,36 +9,28 @@ const STATUSES = {
   SUCCEEDED: "OCR処理完了",
 }
 
-function OcrReader({onReadData, onRemoveClicked}) {
+function OcrReader({onReadOcrData, onRemoveClicked}) {
   const [selectedImage, setSelectedImage] = useState(null)
-  const [loadingState, setLoadingState] = useState(STATUSES.IDLE)
+  const [ocrState, setOcrState] = useState(STATUSES.IDLE)
   const worker = createWorker()
-
-  // 画像のOCR処理開始
-  const initImageReading = async() => {
-    if (!selectedImage) {
-      return
-    }
-    setLoadingState(STATUSES.PENDING)
-    await readImageText()
-  }
   
   // 画像のOCR処理
   const readImageText = async() => {
+    setOcrState(STATUSES.PENDING)
     try {
       await worker.load()
       // OCRで読み取りたい言語を設定
       await worker.loadLanguage("jpn")
       await worker.initialize("jpn")
-      const { data: { text } } = await worker.recognize(selectedImage)
-      await setLoadingState(STATUSES.SUCCEEDED)
+      const { data: { text } } = await worker.recognize(selectedImage) 
       await worker.terminate()
       
       // 日本語テキストはスペースが入ってしまう可能性があるので、スペースを削除
       const strippedText = text.replace(/\s+/g, "")
-      onReadData(strippedText)
+      onReadOcrData(strippedText)
+      setOcrState(STATUSES.SUCCEEDED)
     } catch (err) {
-      setLoadingState(STATUSES.FAILED)
+      setOcrState(STATUSES.FAILED)
     }
   }
   
@@ -46,6 +38,7 @@ function OcrReader({onReadData, onRemoveClicked}) {
   const handleRemoveClicked = () => {
     setSelectedImage(null)
     onRemoveClicked()
+    setOcrState(STATUSES.IDLE)
   }
 
   return (
@@ -58,7 +51,7 @@ function OcrReader({onReadData, onRemoveClicked}) {
       <div>
         {selectedImage?
           <div className="button-container">
-            <button onClick={initImageReading}>画像をOCR処理する</button>
+            <button onClick={readImageText}>画像をOCR処理する</button>
             <button onClick={handleRemoveClicked} className="remove-button">別の画像を使用する</button>
           </div>
           :
@@ -75,8 +68,8 @@ function OcrReader({onReadData, onRemoveClicked}) {
           </>
         }
       </div>
-      <div class="status">
-        {loadingState}
+      <div className="status">
+        {ocrState}
       </div>
       <br />
     </div>

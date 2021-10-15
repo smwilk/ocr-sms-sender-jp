@@ -3,24 +3,26 @@ import OcrReader from "./components/OcrReader"
 import SmsSender from "./components/SmsSender"
 
 function App() {
-  const [data, setData] = useState("")
+  const [ocrData, setOcrData] = useState("")
 
-  const onReadData = (childData) => {
-    setData(childData)
+  // 子コンポーネントからOCRデータをPropsとして受け取る
+  const onReadOcrData = (ocrData) => {
+    setOcrData(ocrData)
   }
 
+  // 子コンポーネントで別の画像を使用するボタンが押されたことをPropsで検知する
   const onRemoveClicked = () => {
-    setData("")
+    setOcrData("")
   }
 
   return (
     <div className="App">
       <header>OCRアプリへようこそ！</header>
       <OcrReader
-        onReadData={onReadData}
+        onReadOcrData={onReadOcrData}
         onRemoveClicked={onRemoveClicked}
       />
-      {data && <SmsSender readText={data}/>}
+      {ocrData && <SmsSender readText={ocrData}/>}
     </div>
   )
 }

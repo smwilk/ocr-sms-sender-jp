@@ -21,28 +21,33 @@ function SmsSender ({readText}) {
     initialCountry: "jp"
   })
 
+  // Get and set on mount
   useEffect(() => {
     setIti(init())
   }, [])
 
   // SMS送信リクエスト
   const sendSMS = async () => {
-    try {
-      const country = iti.getSelectedCountryData()
-      const num = `+${country.dialCode}${iti.telInput.value}`
-      setSmsSendingStatus(STATUSES.PENDING)
-      const res = await fetch("/send-sms", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ to: num, text: smsText }),
-      })
-      const response = await res.json()
-      setSmsSendingStatus(response.sid ? STATUSES.SUCCEEDED : STATUSES.FAILED)
-    } catch (err) {
+    setSmsSendingStatus(STATUSES.PENDING)
+    const country = iti.getSelectedCountryData()
+    const num = `+${country.dialCode}${iti.telInput.value}`
+    await fetch("/send-sms", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ to: num, text: smsText }),
+    }).then((response) => {
+      // Check successful request status
+      if (response.status === 200) {
+        setSmsSendingStatus(STATUSES.SUCCEEDED)
+      } else {
+        setSmsSendingStatus(STATUSES.FAILED)
+      }
+    }).catch(() => {
+      // Catch network errors
       setSmsSendingStatus(STATUSES.FAILED)
-    }
+    })
   }
 
   // 送信ボタンが押されたタイミングでSMS送信する
@@ -75,7 +80,7 @@ function SmsSender ({readText}) {
           <button disabled={smsSendingStatus == "Sending Message..."} type="submit">SMSメッセージを送信</button>
         </div>
       </form>
-      <div class="status">
+      <div className="status">
         {smsSendingStatus}
       </div>
     </div>
