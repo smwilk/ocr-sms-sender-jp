@@ -77,7 +77,7 @@ function SmsSender ({readText}) {
           type="tel"
         />
         <div>
-          <button disabled={smsSendingStatus == "Sending Message..."} type="submit">SMSメッセージを送信</button>
+          <button disabled={smsSendingStatus === "Sending Message..."} type="submit">SMSメッセージを送信</button>
         </div>
       </form>
       <div className="status">
