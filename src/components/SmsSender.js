@@ -21,7 +21,7 @@ function SmsSender ({readText}) {
     initialCountry: "jp"
   })
 
-  // Get and set on mount
+  // レンダー後にInternational Telephone Inputを初期化
   useEffect(() => {
     setIti(init())
   }, [])

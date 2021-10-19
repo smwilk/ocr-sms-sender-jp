@@ -12,6 +12,10 @@ header {
   font-size: 30px;
 }
 
+img {
+  width: 280px;
+}
+
 textarea {
   border: 1px solid #ccc;
 }
@@ -24,6 +28,15 @@ button {
   border: none;
   margin: 3px;
   cursor: pointer;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+}
+
+button:hover {
+  background-color: #1c4b8d;
 }
 
 input[type=text], input[type=tel] {
@@ -48,6 +61,10 @@ input[type=text] {
 
 .remove-button {
   background: #7E7E7E;
+}
+
+.remove-button:hover {
+  background: #414141;
 }
 
 .status {
